@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dompet Keluarga — Atur Uang Bulanan Keluarga</title>
+<meta name="description" content="Dompet Keluarga: situs anggaran rumah tangga berbahasa Indonesia. Lacak pemasukan, pengeluaran, anggaran per kategori, dan laporan bulanan — semua tersimpan di perangkat Anda.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="#/dashboard" aria-label="Dompet Keluarga — beranda">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" width="30" height="30"><rect x="2" y="7" width="28" height="20" rx="4" fill="#2e7d4f"/><rect x="2" y="7" width="28" height="7" rx="3" fill="#f2b544"/><circle cx="23" cy="17" r="3.4" fill="#fff7e0"/><circle cx="23" cy="17" r="1.4" fill="#2e7d4f"/></svg></span>
+      <span class="brand-text"><strong>Dompet Keluarga</strong><small>Uang bulanan, terkendali.</small></span>
+    </a>
+    <nav class="mainnav" aria-label="Navigasi utama">
+      <a href="#/dashboard" data-nav="dashboard">Ringkasan</a>
+      <a href="#/transaksi" data-nav="transaksi">Transaksi</a>
+      <a href="#/anggaran" data-nav="anggaran">Anggaran</a>
+      <a href="#/laporan" data-nav="laporan">Laporan</a>
+    </nav>
+    <div class="month-pick">
+      <label for="monthSelect">Bulan</label>
+      <select id="monthSelect">
+        <option value="2026-11" selected>November 2026</option>
+      </select>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="view-dashboard" class="view" aria-label="Ringkasan">
+    <div class="hero">
+      <div>
+        <p class="eyebrow">Keluarga Ahmad &amp; Intan — November 2026</p>
+        <h1>Uang bulan ini masih terkendali.</h1>
+        <p class="lede">Pemasukan Rp 9.700.000, pengeluaran Rp 5.240.000. Sisa Rp 4.460.000 — cukup untuk tabungan dan jaga-jaga sampai gajian berikutnya.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#/transaksi">+ Catat transaksi</a>
+          <a class="btn" href="#/anggaran">Lihat anggaran</a>
+        </div>
+      </div>
+      <div class="hero-card" aria-label="Saldo dompet">
+        <p class="card-label">Saldo dompet</p>
+        <p class="card-big" id="heroBalance">Rp 4.460.000</p>
+        <p class="card-sub" id="heroBalanceSub">Sisa setelah semua pengeluaran November</p>
+        <div class="meter"><span id="heroMeter" style="width:46%"></span></div>
+        <p class="card-sub">46% pemasukan belum terpakai</p>
+      </div>
+    </div>
+
+    <div class="kpis" id="kpiRow"></div>
+
+    <div class="grid-2">
+      <article class="card">
+        <div class="card-head"><h2>Pengeluaran per kategori</h2><span class="tag">November 2026</span></div>
+        <div id="catChart" class="chart" role="img" aria-label="Grafik batang pengeluaran per kategori"></div>
+        <p class="note">Kategori terbesar: Belanja Harian Rp 1.285.000, disusul Pendidikan Rp 1.070.000.</p>
+      </article>
+      <article class="card">
+        <div class="card-head"><h2>Transaksi terbaru</h2><a class="link" href="#/transaksi">Semua transaksi →</a></div>
+        <ul class="tx-list" id="recentTx"></ul>
+      </article>
+    </div>
+
+    <article class="card">
+      <div class="card-head"><h2>Anggaran bulan ini — sekilas</h2><a class="link" href="#/anggaran">Atur anggaran →</a></div>
+      <div id="budgetPreview" class="budget-rows"></div>
+    </article>
+
+    <article class="card tip">
+      <h2>Tips hemat minggu ini</h2>
+      <p>Belanja pasar hari Rabu dan Sabtu biasanya lebih murah Rp 15.000–Rp 25.000 per belanja dibanding hari Minggu. Token listrik Rp 200.000 masih cukup sampai 5 Desember — isi ulang tanggal 3 Desember agar tidak kehabisan di malam hari.</p>
+    </article>
+  </section>
+
+  <section id="view-transaksi" class="view" aria-label="Transaksi" hidden>
+    <div class="page-head">
+      <div><h1>Transaksi</h1><p class="lede">Semua pemasukan dan pengeluaran keluarga. Tersimpan di perangkat Anda (localStorage) — tambah, ubah, atau hapus kapan saja.</p></div>
+      <button class="btn btn-primary" id="showFormBtn" type="button">+ Transaksi baru</button>
+    </div>
+
+    <form id="txForm" class="card form-card" hidden>
+      <h2 id="formTitle">Tambah transaksi</h2>
+      <div class="form-grid">
+        <label>Jenis
+          <select id="fType"><option value="keluar">Pengeluaran</option><option value="masuk">Pemasukan</option></select>
+        </label>
+        <label>Jumlah (Rp)
+          <input id="fAmount" type="number" min="1000" step="500" placeholder="contoh: 150000" required>
+        </label>
+        <label>Kategori
+          <select id="fCategory"></select>
+        </label>
+        <label>Tanggal
+          <input id="fDate" type="date" value="2026-11-27" required>
+        </label>
+        <label class="span-2">Keterangan
+          <input id="fNote" type="text" maxlength="80" placeholder="contoh: Belanja sayur di pasar pagi" required>
+        </label>
+      </div>
+      <p class="form-error" id="formError" hidden></p>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Simpan transaksi</button>
+        <button class="btn" type="button" id="cancelFormBtn">Batal</button>
+      </div>
+    </form>
+
+    <div class="card filters" role="search">
+      <label>Cari <input id="q" type="search" placeholder="cari: pasar, listrik, SPP…"></label>
+      <label>Jenis
+        <select id="fKind"><option value="">Semua</option><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select>
+      </label>
+      <label>Kategori <select id="fCat"><option value="">Semua kategori</option></select></label>
+      <label>Bulan <select id="fMonth"><option value="">Semua</option><option value="2026-11" selected>November 2026</option><option value="2026-10">Oktober 2026</option></select></label>
+      <button class="btn" id="resetFilters" type="button">Reset</button>
+    </div>
+
+    <p class="count-line" id="txCount"></p>
+    <div class="card table-wrap">
+      <table class="tx-table">
+        <thead><tr><th>Tanggal</th><th>Keterangan</th><th>Kategori</th><th>Jenis</th><th class="num">Jumlah</th><th>Aksi</th></tr></thead>
+        <tbody id="txBody"></tbody>
+      </table>
+      <p class="empty" id="txEmpty" hidden>Tidak ada transaksi yang cocok dengan filter. Coba ubah kata kunci atau reset filter.</p>
+    </div>
+  </section>
+
+  <section id="view-anggaran" class="view" aria-label="Anggaran" hidden>
+    <div class="page-head">
+      <div><h1>Anggaran November 2026</h1><p class="lede">Total anggaran belanja Rp 6.150.000 dari pemasukan Rp 9.700.000. Sisanya Rp 3.550.000 dialokasikan ke tabungan dan dana darurat.</p></div>
+    </div>
+    <div class="kpis" id="budgetKpis"></div>
+    <div class="card">
+      <div class="card-head"><h2>Per kategori</h2><span class="tag">Klik “Ubah” untuk menyesuaikan batas</span></div>
+      <div id="budgetList" class="budget-rows"></div>
+    </div>
+    <article class="card tip">
+      <h2>Yang perlu diperhatikan</h2>
+      <p><strong>Kesehatan</strong> sudah melewati anggaran Rp 35.000 karena kontrol gigi — bulan depan sisihkan Rp 450.000 untuk kategori ini. <strong>Transport</strong> sudah 96% terpakai, jadi batasi ojek online sampai akhir bulan.</p>
+    </article>
+  </section>
+
+  <section id="view-laporan" class="view" aria-label="Laporan" hidden>
+    <div class="page-head">
+      <div><h1>Laporan bulanan</h1><p class="lede">November 2026 dibandingkan Oktober 2026 — apa yang naik, apa yang turun, dan ke mana uang pergi.</p></div>
+    </div>
+    <div class="kpis" id="reportKpis"></div>
+    <div class="grid-2">
+      <article class="card">
+        <div class="card-head"><h2>Bulan ini vs bulan lalu</h2><span class="tag">per kategori</span></div>
+        <div id="compareChart" class="chart"></div>
+      </article>
+      <article class="card">
+        <div class="card-head"><h2>Ke mana uang pergi?</h2><span class="tag">November 2026</span></div>
+        <div id="shareList"></div>
+        <p class="note">Dari setiap Rp 100 yang keluar, Rp 25 untuk belanja harian, Rp 20 untuk pendidikan, dan Rp 19 untuk tabungan.</p>
+      </article>
+    </div>
+    <article class="card">
+      <h2>Kesimpulan bulan ini</h2>
+      <p>Pengeluaran November turun <strong>Rp 865.000</strong> dibanding Oktober, terutama karena biaya kesehatan turun Rp 185.000 setelah kontrol gigi selesai. Pemasukan naik Rp 300.000 dari proyek freelance. Kalau pola ini bertahan, tabungan akhir tahun bisa mencapai <strong>Rp 3.000.000</strong> — cukup untuk dana darurat satu bulan.</p>
+      <p class="note">Laporan dibuat dari transaksi yang tercatat di situs ini. Tambah transaksi di halaman Transaksi dan laporan ikut berubah.</p>
+    </article>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p><strong>Dompet Keluarga</strong> — situs anggaran rumah tangga berbahasa Indonesia. Data contoh keluarga Ahmad &amp; Intan, November 2026. Semua data tersimpan lokal di perangkat Anda; situs ini tidak mengirim apa pun ke internet.</p>
+    <p class="note">Angka dalam rupiah (Rp). Dibuat sebagai situs statis tanpa permintaan jaringan.</p>
+  </div>
+</footer>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>
